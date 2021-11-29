@@ -1,0 +1,348 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Canvas Test</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css">
+
+</head>
+<body> 
+<section>
+
+<h1>Sliding Doge Game</h1>
+
+
+<div>
+<canvas id="canvas"></canvas>
+
+
+
+<img id="doge" src="doge.jpeg" alt="Smiley face" height="0" width="0">
+</div>
+
+<button type="button" onclick="reload()">Reset</button>
+
+
+
+
+
+
+<script type="text/javascript">
+
+  function reload(){
+        alert("Quitters Never Win")
+        location.reload();
+    }
+
+//variables for canvas, context, width of border, and height of border around canvas
+
+var canvas;
+var ctx;
+var WIDTH;
+var HEIGHT;
+var endGame = false;
+var image = document.getElementById("doge");
+var number = prompt("Pick a number for your board size e.g 3 for a 3x3");
+var TileArray = givetileArray(number);
+
+  
+ 
+  
+  function setCanvas(num){
+      WIDTH = num*100;
+      HEIGHT = num*100;
+  }
+  
+
+  
+  function didWin(tiles){
+        var winCount = 0;
+        for(var x = 0; x<tiles.length;x++){
+            if(tiles[x].getX() === tiles[x].getOriginalX() && tiles[x].getY() === tiles[x].getOriginalY()){
+                winCount++;
+            }
+        }
+        if(winCount === tiles.length){
+            endGame = true;
+        }
+    }
+
+    function givetileArray(num){
+        var tileArray = [];
+
+        var tileCount = 1;
+
+
+        var splitWidth = image.naturalWidth/num;
+        var splitHeight = image.naturalHeight/num;
+
+        for(var d = 0; d < num; d++){
+             for(var e = 0; e < num; e++){
+                var tile = new Tile(tileCount,e*100,d*100,100,100,e*splitWidth,d*splitHeight);
+                tileArray.push(tile);
+                tileCount++;
+            }
+        }
+    
+	      
+	
+	 for(var i = 0; i < 100000; i++){
+        var rn1 = Math.floor((Math.random() * (num*num)));
+                     for(var n = 0; n < tileArray.length; n++){
+                         
+                         
+                         
+                         if(tileArray[n].getNumber() === tileArray.length){
+                             var tempX = tileArray[rn1].getX();
+    	                     var tempY = tileArray[rn1].getY();
+                             
+                             if(tileArray[rn1].getX() + 100 === tileArray[n].getX() && tileArray[rn1].getY() === tileArray[n].getY()){
+                                 
+    	                         
+    	                          tileArray[rn1].setX(tileArray[n].getX());
+                                  tileArray[rn1].setY(tileArray[n].getY());
+    	
+    	                          tileArray[n].setX(tempX);
+    	                          tileArray[n].setY(tempY);
+                             }
+                             
+                             else if(tileArray[rn1].getX() - 100 === tileArray[n].getX() && tileArray[rn1].getY() === tileArray[n].getY()){
+                            
+    	                          
+    	                          tileArray[rn1].setX(tileArray[n].getX());
+                                  tileArray[rn1].setY(tileArray[n].getY());
+    	
+    	                          tileArray[n].setX(tempX);
+    	                          tileArray[n].setY(tempY);
+                             }
+                             
+                             else if(tileArray[rn1].getY() + 100 === tileArray[n].getY() && tileArray[rn1].getX() === tileArray[n].getX()){
+                            
+    	                          
+    	                          tileArray[rn1].setX(tileArray[n].getX());
+                                  tileArray[rn1].setY(tileArray[n].getY());
+    	
+    	                          tileArray[n].setX(tempX);
+    	                          tileArray[n].setY(tempY);
+                             }
+                             
+                             else if(tileArray[rn1].getY() - 100 === tileArray[n].getY() && tileArray[rn1].getX() === tileArray[n].getX()){
+                            
+    	                          
+    	                          tileArray[rn1].setX(tileArray[n].getX());
+                                  tileArray[rn1].setY(tileArray[n].getY());
+    	
+    	                          tileArray[n].setX(tempX);
+    	                          tileArray[n].setY(tempY);
+                             }
+                             
+                             
+                         }
+                     
+           }
+       }
+      
+  
+      return tileArray;
+    }
+
+   
+    
+
+//Loads canvas and draws desired graphics every 10 miliseconds
+function init(tileArray,width,height) {
+    document.getElementById("canvas").width = width;
+    document.getElementById("canvas").height = height;
+    canvas = document.getElementById("canvas");
+    document.getElementById("doge").width = WIDTH;
+    document.getElementById("doge").height = HEIGHT;
+    ctx = canvas.getContext("2d");
+    //Creates an array of tiles and randomizes their coordinates
+    function reload(){
+        location.reload();
+    }
+    
+    function draw() {
+        clear();
+        ctx.fillStyle = "white";
+        ctx.strokeStyle = "black";
+        border(0,0,WIDTH,HEIGHT);
+
+    canvas.onclick = function doMouseDown(e){
+        if(e.which === 1){
+            
+        canvas = document.getElementById("canvas");
+
+        var cursorX = e.pageX - canvas.getBoundingClientRect().left;
+        var cursorY = e.pageY - canvas.getBoundingClientRect().top;
+        
+            for(var i = 0; i < tileArray.length; i++){
+               if(Math.floor(tileArray[i].getX() / 100) === Math.floor(cursorX / 100) && Math.floor(tileArray[i].getY() / 100) === Math.floor(cursorY / 100)){
+                     for(var n = 0; n < tileArray.length; n++){
+                         
+                         
+                         
+                         if(tileArray[n].getNumber() === tileArray.length){
+                             var tempX = tileArray[i].getX();
+    	                     var tempY = tileArray[i].getY();
+                             
+                             if(tileArray[i].getX() + 100 === tileArray[n].getX() && tileArray[i].getY() === tileArray[n].getY()){
+                                 
+    	                         
+    	                          tileArray[i].setX(tileArray[n].getX());
+                                  tileArray[i].setY(tileArray[n].getY());
+    	
+    	                          tileArray[n].setX(tempX);
+    	                          tileArray[n].setY(tempY);
+                             }
+                             
+                             else if(tileArray[i].getX() - 100 === tileArray[n].getX() && tileArray[i].getY() === tileArray[n].getY()){
+                            
+    	                          
+    	                          tileArray[i].setX(tileArray[n].getX());
+                                  tileArray[i].setY(tileArray[n].getY());
+    	
+    	                          tileArray[n].setX(tempX);
+    	                          tileArray[n].setY(tempY);
+                             }
+                             
+                             else if(tileArray[i].getY() + 100 === tileArray[n].getY() && tileArray[i].getX() === tileArray[n].getX()){
+                            
+    	                          
+    	                          tileArray[i].setX(tileArray[n].getX());
+                                  tileArray[i].setY(tileArray[n].getY());
+    	
+    	                          tileArray[n].setX(tempX);
+    	                          tileArray[n].setY(tempY);
+                             }
+                             
+                             else if(tileArray[i].getY() - 100 === tileArray[n].getY() && tileArray[i].getX() === tileArray[n].getX()){
+                            
+    	                          
+    	                          tileArray[i].setX(tileArray[n].getX());
+                                  tileArray[i].setY(tileArray[n].getY());
+    	
+    	                          tileArray[n].setX(tempX);
+    	                          tileArray[n].setY(tempY);
+                             }
+                             
+                             
+                         }
+                     }
+           }
+       }
+    }
+}
+
+ 
+
+for(var t = 0; t < tileArray.length; t++){
+    if(t<tileArray.length-1){
+    ctx.drawImage(image,tileArray[t].getsx(),tileArray[t].getsy(),image.naturalWidth/number,image.naturalHeight/number,tileArray[t].getX(),tileArray[t].getY(),100,100);
+    }
+  }
+  didWin(tileArray);
+  if(endGame === true){
+      clearInterval(myVar);
+      alert("Much Good");
+      return;
+  }
+}
+
+    var myVar = setInterval(draw, 10);
+    return myVar;
+}
+
+function border(x,y,w,h) {
+ctx.beginPath();
+ctx.rect(x,y,w,h);
+ctx.closePath();
+ctx.fill();
+ctx.stroke();
+}
+
+function clear() {
+ctx.clearRect(0, 0, WIDTH, HEIGHT);
+}
+
+
+function Tile(num,xCoord,yCoord,width,height,offsetX,offsetY){
+  var number = num;
+  var x = xCoord;
+  var y = yCoord;
+  var w = width;
+  var h = height;
+  var sx = offsetX;
+  var sy = offsetY;
+  
+  var originalX = xCoord;
+  var originalY = yCoord;
+  
+  this.getX = function(){
+        return x;
+    };
+   
+    this.setX = function(val){
+        x = val;
+    };
+    
+    this.getY = function(){
+        return y;
+    };
+   
+    this.setY = function(val){
+        y = val;
+    };
+    
+     this.getWidth = function(){
+        return w;
+    };
+   
+     this.getHeight = function(){
+        return h;
+    }; 
+    
+    this.getNumber = function(){
+        return number;
+    };
+    
+    this.getOriginalX = function(){
+        return originalX;
+    };
+    
+     this.getOriginalY = function(){
+        return originalY;
+    };
+    
+    this.getsx = function(){
+        return sx;
+    };
+    
+    this.getsy = function(){
+        return sy;
+    };
+}
+
+
+
+setCanvas(number);
+init(TileArray,WIDTH,HEIGHT);
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+</section>
+</body>
+</html>
